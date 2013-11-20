@@ -2,118 +2,79 @@
 using System.Collections;
 
 public class PlayerControlScript : MonoBehaviour {
+	
+	
 
 
-	private Transform groundCheck;			// A position marking where to check if the player is grounded.
-	public bool grounded = false;
-	public bool left = false;
+	/*public bool left = false;
 	public bool right = false;
 	public bool jump = false;
 	public bool crouch = false;
-
-
+	
+	
 	public bool lp = false;
 	public bool mp = false;
 	public bool hp = false;
 	public bool lk = false;
 	public bool mk = false;
-	public bool hk = false;
-
+	public bool hk = false;*/
+	
+	public ActionScript actionController;
+	
 	// Use this for initialization
 	void Start () {
+		
+		actionController = GetComponent <ActionScript>();
+	}
 	
-	}
 
-	void Awake()
-	{
-		// Setting up references.
-		groundCheck = transform.Find("groundCheck");
-	}
-
+	
 	
 	// Update is called once per frame
 	void Update () {
-
-		// The player is grounded if a linecast to the groundcheck position hits anything on the ground layer.
-		grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));  
-
+		
+		 
+		
 		//Movement
-		if(Input.GetKeyDown(KeyCode.A) && grounded && !crouch)
-			left = true;
-		if(Input.GetKeyDown(KeyCode.D) && grounded && !crouch)
-			right = true;
-		if(Input.GetKeyUp(KeyCode.A) && grounded)
-			left = false;
-		if(Input.GetKeyUp(KeyCode.D) && grounded)
-			right = false;
-
-		if(Input.GetKeyDown(KeyCode.S) && grounded)
-			crouch = true;
-		if(Input.GetKeyUp(KeyCode.S) && grounded)
-			crouch = false;
-		if(Input.GetKeyDown(KeyCode.W) && grounded)
-			jump = true;
+		if(Input.GetKey(KeyCode.A))
+			actionController.Left();
+		if(Input.GetKey(KeyCode.D))
+			actionController.Right();
+		if(Input.GetKey(KeyCode.S))
+			actionController.Crouch();
+		if(Input.GetKeyUp(KeyCode.S))
+			actionController.CrouchOff();
+		if(Input.GetKey(KeyCode.W))
+			actionController.Jump();
+		/*if(Input.GetKey(KeyCode.W) && (Input.GetKey(KeyCode.D)|| Input.GetKey(KeyCode.A))){
+			actionController.JumpDiag();
+			Debug.Log("Diag");
+		}*/
 		//Punches
-		if(Input.GetKeyDown(KeyCode.Y) && grounded)
-			lp = true;
-		if(Input.GetKeyDown(KeyCode.U) && grounded)
-			mp = true;
-		if(Input.GetKeyDown(KeyCode.I) && grounded)
-			hp = true;
-
-		if(Input.GetKeyUp(KeyCode.Y) && grounded)
-			lp = false;
-		if(Input.GetKeyUp(KeyCode.U) && grounded)
-			mp = false;
-		if(Input.GetKeyUp(KeyCode.I) && grounded)
-			hp = false;
-
+		if(Input.GetKeyDown(KeyCode.Y))
+			actionController.LP ();
+		if(Input.GetKeyDown(KeyCode.U))
+			actionController.MP ();
+		if(Input.GetKeyDown(KeyCode.I))
+			actionController.HP ();
 		//Kicks
-		if(Input.GetKeyDown(KeyCode.H) && grounded)	
-			lk = true;
-		if(Input.GetKeyDown(KeyCode.J) && grounded)
-			mk = true;		
-		if(Input.GetKeyDown(KeyCode.K) && grounded)
-			hk = true;	
+		if(Input.GetKeyDown(KeyCode.H))	
+			actionController.LK ();
+		if(Input.GetKeyDown(KeyCode.J))
+			actionController.MK ();		
+		if(Input.GetKeyDown(KeyCode.K))
+			actionController.HK ();
 
-		if(Input.GetKeyUp(KeyCode.H) && grounded)	
-			lk = false;
-		if(Input.GetKeyUp(KeyCode.J) && grounded)
-			mk = false;		
-		if(Input.GetKeyUp(KeyCode.K) && grounded)
-			hk = false;	
-		/*if(Input.GetKeyDown(KeyCode.F))
-		{Flip (); Debug.Log("Flip");}*/
+		
+		if(Input.GetKeyDown(KeyCode.T))
+			Debug.Log (Time.time);
+
 	}
-
+	
 	void FixedUpdate(){
 		
-		// Cache the horizontal input.
-		float h = Input.GetAxis("Horizontal");
-		
-		// The Speed animator parameter is set to the absolute value of the horizontal input.
-		//anim.SetFloat("speed", Mathf.Abs(h));
-		//anim.SetFloat("speed", h);
-		
-		// If the player is changing direction (h has a different sign to velocity.x) or hasn't reached maxSpeed yet...
-		/*if(h * rigidbody2D.velocity.x < maxSpeed && !crouch && grounded)
-			// ... add a force to the player.
-			rigidbody2D.AddForce(Vector2.right * h * moveForce);
-		
-		// If the player's horizontal velocity is greater than the maxSpeed...
-		if(Mathf.Abs(rigidbody2D.velocity.x) > maxSpeed)
-			// ... set the player's velocity to the maxSpeed in the x axis.
-			rigidbody2D.velocity = new Vector2(Mathf.Sign(rigidbody2D.velocity.x) * maxSpeed, rigidbody2D.velocity.y);
-*/
-
-		/*if(jump && rigidbody2D.velocity.x>0)
-		{
-			rigidbody2D.AddForce(new Vector2(10f, jumpForce));
-
-		}*/
-
 	}
-
-
-
+	
+	
+	
 }

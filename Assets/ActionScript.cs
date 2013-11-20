@@ -3,6 +3,9 @@ using System.Collections;
 
 public class ActionScript : MonoBehaviour {
 
+	private Transform groundCheck;			// A position marking where to check if the player is grounded.
+	public bool grounded = false;
+
 	public bool facingRight = true;
 	public float jumpForce = 400f;
 	public float moveForce = 20f;			// Amount of force added to move the player left and right.
@@ -21,20 +24,33 @@ public class ActionScript : MonoBehaviour {
 	private bool right = false;
 	private bool left = false;
 
+	//Timers
+	private float jumpTimer = 0.0f;
+	public float lpTimer = 0.0f;
+
 
 	private PlayerControlScript controller;
+
+	public AnimationScript anim;
 	// Use this for initialization
 	void Start () {
 
 		controller = GetComponent <PlayerControlScript> ();
+		anim = GetComponentInChildren<AnimationScript>();
 
 
+	}
+
+	void Awake()
+	{
+		// Setting up references.
+		groundCheck = transform.Find("groundCheck");
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
-		jump = controller.jump;
+		/*jump = controller.jump;
 		crouch = controller.crouch;
 		lp = controller.lp;
 		mp = controller.mp;
@@ -43,31 +59,13 @@ public class ActionScript : MonoBehaviour {
 		mk = controller.mk;
 		hk = controller.hk;
 		left = controller.left;
-		right = controller.right;
+		right = controller.right;*/
+
+		// The player is grounded if a linecast to the groundcheck position hits anything on the ground layer.
+		grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground")); 
 
 	}
 	void FixedUpdate () {
-		if(jump)
-		{
-			Jump();
-		}
-		if(crouch)
-		{
-			Crouch();
-		}
-
-		float h = Input.GetAxis("Horizontal");
-
-		if(right){
-			Right (h);
-		}
-		if(left){
-			Left (h);
-		}
-		/*if(h * rigidbody2D.velocity.x < maxSpeed && !crouch && grounded)
-		{
-
-		}*/
 
 		if(Mathf.Abs(rigidbody2D.velocity.x) > maxSpeed)
 		{
@@ -75,43 +73,106 @@ public class ActionScript : MonoBehaviour {
 		}
 	}
 
-	void Jump(){
-		rigidbody2D.AddForce(new Vector2(0f, jumpForce));
-		Debug.Log ("Jump");
+	public void Jump(){
+		if(grounded && !crouch){
+			if(jumpTimer==0){
+				if (rigidbody2D.velocity.x==0){
+					rigidbody2D.AddForce(new Vector2(0.0f, jumpForce));
+				}else{
+					if(rigidbody2D.velocity.x>0.1){
+						rigidbody2D.AddForce(new Vector2(100f, jumpForce));
+					}else if(rigidbody2D.velocity.x<-0.1){
+						rigidbody2D.AddForce(new Vector2(-100f, jumpForce));
+					}
+				}
+				anim.Jump();
+				Debug.Log ("Jump");
+				jumpTimer = Time.time+1.5f;
+			}else if(Time.time < jumpTimer){
+				Debug.Log ("Too Soon");
+			}else if(Time.time > jumpTimer){
+				jumpTimer = 0;	
+			}
+		}
 	}
 
-	void Crouch(){
-		Debug.Log ("Crouch");
+	/*public void JumpDiag(){
+		if(grounded){
+			if(jumpTimer==0){
+				if(rigidbody2D.velocity.x>0.1){
+					rigidbody2D.AddForce(new Vector2(100f, jumpForce));
+				}else if(rigidbody2D.velocity.x<-0.1){
+					rigidbody2D.AddForce(new Vector2(-100f, jumpForce));
+				}else{
+					return;
+				}
+				anim.Jump();
+				Debug.Log ("Jump");
+				jumpTimer = Time.time+1.5f;
+			}else if(Time.time < jumpTimer){
+				Debug.Log ("Too Soon");
+			}else if(Time.time > jumpTimer){
+				jumpTimer = 0;	
+			}
+		}
+
+
+	}*/
+
+	public void Crouch(){
+		if(grounded){
+			crouch = true;
+			anim.Crouch();
+			Debug.Log ("Crouch");
+		}
+	}
+	public void CrouchOff(){
+		crouch = false;
+		anim.CrouchOff();
+		Debug.Log ("Crouch Off");
 	}
 
-	void LP(){
-		Debug.Log ("Low Punch");
+	public void LP(){
+		if(lpTimer==0){
+			Debug.Log ("Low Punch");
+			lpTimer = Time.time+3.7f;
+		}else if(Time.time < lpTimer){
+			Debug.Log ("Too Soon");
+		}else if(Time.time > lpTimer){
+
+			lpTimer = 0;
+
+		}
 	}
-	void MP(){
+	public void MP(){
 		Debug.Log ("Mid Punch");
 	}
-	void HP(){
+	public void HP(){
 		Debug.Log ("High Punch");
 	}
-	void LK(){
+	public void LK(){
 		Debug.Log ("Low Kick");
 	}
-	void MK(){
+	public void MK(){
 		Debug.Log ("Mid Kick");
 	}
-	void HK(){
+	public void HK(){
 		Debug.Log ("High Kick");
 	}
-	void Right(float h){
-		rigidbody2D.AddForce(Vector2.right * h * moveForce);
-		Debug.Log ("Right");
+	public void Right(){
+		if(!crouch && !jump && grounded){
+			rigidbody2D.AddForce(Vector2.right * 1 * moveForce);
+			Debug.Log ("Right");
+		}
 	}
-	void Left(float h){
-		rigidbody2D.AddForce(Vector2.right * h * moveForce);
-		Debug.Log ("Left");
+	public void Left(){
+		if(!crouch && !jump && grounded){
+			rigidbody2D.AddForce(Vector2.right * -1 * moveForce);
+			Debug.Log ("Left");
+		}
 	}
 
-	void Flip ()
+	public void Flip ()
 	{
 		// Switch the way the player is labelled as facing.
 		facingRight = !facingRight;

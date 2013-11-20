@@ -23,29 +23,18 @@ public class AnimationScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-
 		// Cache the horizontal input.
 		float h = Input.GetAxis("Horizontal");
-		crouch = transform.parent.gameObject.GetComponent<PlayerControlScript>().crouch;//GetComponent<PlayerControlScript>().crouch;
-		jump = transform.parent.gameObject.GetComponent<PlayerControlScript>().jump;
-		bool grounded = transform.parent.gameObject.GetComponent<PlayerControlScript>().grounded;
-		//bool crouch = other.crouch;
-		//whateva.functionMan();
-		
-		// The Speed animator parameter is set to the absolute value of the horizontal input.
-		//anim.SetFloat("speed", Mathf.Abs(h));
-
-		//if(!grounded){
 		anim.SetFloat("Speed", h);
 
 
-		if(crouch)
+	/*	if(crouch)
 		{
 			anim.SetBool("Crouch", true);
 		}
 		else{
 			anim.SetBool("Crouch", false);
-		}
+		}*/
 
 		if(jump)
 		{
@@ -54,8 +43,26 @@ public class AnimationScript : MonoBehaviour {
 
 			//jump = false;
 
-			transform.parent.gameObject.GetComponent<PlayerControlScript>().jump = false;
+			//transform.parent.gameObject.GetComponent<PlayerControlScript>().jump = false;
 		}
+	}
+
+	public void Crouch(){
+
+		anim.SetBool("Crouch", true);
+
+	}
+
+	public void CrouchOff(){
+		
+		anim.SetBool("Crouch", false);
+		
+	}
+
+	public void Jump(){
+
+		anim.SetTrigger("Jump");
+
 	}
 
 
