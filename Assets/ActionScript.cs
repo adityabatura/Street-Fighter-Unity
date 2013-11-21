@@ -103,7 +103,7 @@ public class ActionScript : MonoBehaviour {
 		if(moveTimer==0){
 			anim.LP();
 			Debug.Log ("Low Punch");
-			moveTimer = Time.time+0.3f;
+			moveTimer = Time.time+0.18f;
 		}else if(Time.time < moveTimer){
 			Debug.Log ("Too Soon");
 		}else if(Time.time > moveTimer){
