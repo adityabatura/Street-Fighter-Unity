@@ -26,7 +26,7 @@ public class ActionScript : MonoBehaviour {
 
 	//Timers
 	private float jumpTimer = 0.0f;
-	public float lpTimer = 0.0f;
+	public float moveTimer = 0.0f;
 
 
 	private PlayerControlScript controller;
@@ -49,18 +49,6 @@ public class ActionScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
-		/*jump = controller.jump;
-		crouch = controller.crouch;
-		lp = controller.lp;
-		mp = controller.mp;
-		hp = controller.hp;
-		lk = controller.lk;
-		mk = controller.mk;
-		hk = controller.hk;
-		left = controller.left;
-		right = controller.right;*/
-
 		// The player is grounded if a linecast to the groundcheck position hits anything on the ground layer.
 		grounded = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground")); 
 
@@ -96,28 +84,7 @@ public class ActionScript : MonoBehaviour {
 		}
 	}
 
-	/*public void JumpDiag(){
-		if(grounded){
-			if(jumpTimer==0){
-				if(rigidbody2D.velocity.x>0.1){
-					rigidbody2D.AddForce(new Vector2(100f, jumpForce));
-				}else if(rigidbody2D.velocity.x<-0.1){
-					rigidbody2D.AddForce(new Vector2(-100f, jumpForce));
-				}else{
-					return;
-				}
-				anim.Jump();
-				Debug.Log ("Jump");
-				jumpTimer = Time.time+1.5f;
-			}else if(Time.time < jumpTimer){
-				Debug.Log ("Too Soon");
-			}else if(Time.time > jumpTimer){
-				jumpTimer = 0;	
-			}
-		}
 
-
-	}*/
 
 	public void Crouch(){
 		if(grounded){
@@ -133,14 +100,15 @@ public class ActionScript : MonoBehaviour {
 	}
 
 	public void LP(){
-		if(lpTimer==0){
+		if(moveTimer==0){
+			anim.LP();
 			Debug.Log ("Low Punch");
-			lpTimer = Time.time+3.7f;
-		}else if(Time.time < lpTimer){
+			moveTimer = Time.time+0.3f;
+		}else if(Time.time < moveTimer){
 			Debug.Log ("Too Soon");
-		}else if(Time.time > lpTimer){
+		}else if(Time.time > moveTimer){
 
-			lpTimer = 0;
+			moveTimer = 0;
 
 		}
 	}
@@ -151,10 +119,30 @@ public class ActionScript : MonoBehaviour {
 		Debug.Log ("High Punch");
 	}
 	public void LK(){
-		Debug.Log ("Low Kick");
+		if(moveTimer==0){
+			anim.LK();
+			Debug.Log ("Low Kick");
+			moveTimer = Time.time+0.5f;
+		}else if(Time.time < moveTimer){
+			Debug.Log ("Too Soon");
+		}else if(Time.time > moveTimer){
+			
+			moveTimer = 0;
+			
+		}
 	}
 	public void MK(){
-		Debug.Log ("Mid Kick");
+		if(moveTimer==0){
+			anim.LK();
+			Debug.Log ("Mid Kick");
+			moveTimer = Time.time+0.5f;
+		}else if(Time.time < moveTimer){
+			Debug.Log ("Too Soon");
+		}else if(Time.time > moveTimer){
+			
+			moveTimer = 0;
+			
+		}
 	}
 	public void HK(){
 		Debug.Log ("High Kick");

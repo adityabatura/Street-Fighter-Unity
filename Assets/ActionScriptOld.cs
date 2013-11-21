@@ -145,4 +145,27 @@ public class ActionScriptOld : MonoBehaviour {
 		theScale.x *= -1;
 		transform.localScale = theScale;
 	}
+
+	/*public void JumpDiag(){
+		if(grounded){
+			if(jumpTimer==0){
+				if(rigidbody2D.velocity.x>0.1){
+					rigidbody2D.AddForce(new Vector2(100f, jumpForce));
+				}else if(rigidbody2D.velocity.x<-0.1){
+					rigidbody2D.AddForce(new Vector2(-100f, jumpForce));
+				}else{
+					return;
+				}
+				anim.Jump();
+				Debug.Log ("Jump");
+				jumpTimer = Time.time+1.5f;
+			}else if(Time.time < jumpTimer){
+				Debug.Log ("Too Soon");
+			}else if(Time.time > jumpTimer){
+				jumpTimer = 0;	
+			}
+		}
+
+
+	}*/
 }

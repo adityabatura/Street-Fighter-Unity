@@ -65,5 +65,17 @@ public class AnimationScript : MonoBehaviour {
 
 	}
 
+	public void LP(){
+		
+		anim.SetTrigger("LP");
+		
+	}
+
+	public void LK(){
+		
+		anim.SetTrigger("L_MK");
+		
+	}
+
 
 }
