@@ -40,7 +40,6 @@ public class PlayerControlScript : MonoBehaviour {
 			actionController.Left();
 		if(Input.GetKey(KeyCode.D))
 			actionController.Right();
-
 		if(Input.GetKey(KeyCode.S))
 			actionController.Crouch();
 		if(Input.GetKeyUp(KeyCode.S))
@@ -67,8 +66,8 @@ public class PlayerControlScript : MonoBehaviour {
 			actionController.HK ();
 
 		
-		//if(Input.GetKeyDown(KeyCode.T))
-			//Debug.Log (Time.time);
+		if(Input.GetKeyDown(KeyCode.T))
+			Debug.Log (Time.time);
 
 	}
 	
